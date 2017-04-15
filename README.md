@@ -1,1 +1,1 @@
-# blstudy2017.0
+# Blender勉強会用の資料です

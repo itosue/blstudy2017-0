@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-    <title>飲み代を課金して進捗を取り戻す</title>
+    <title>第4回 Blender 勉強会 難波　スカルプト入門</title>
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -52,89 +52,103 @@
 
           <div class="blog-post">
             <br />
-            <h2 class="blog-post-title">飲み代を課金して進捗を取り戻す</h2>
+            <h2 class="blog-post-title">第4回 Blender 勉強会 難波　スカルプト入門</h2>
             <br />
-            <p>この文章は<a href="http://www.adventar.org/calendars/1571"  target="_blank">Blender Advent Calender 2016</a> 12月3日の記事です。</p>
-            <p>　こんばんは。いとすです。すっかり年も暮れて寒くなってきましたが皆さんいかがお過ごしでしょうか。 巷では課金によってイラストのみだったキャラクターが立体化されて歌って踊って<a href="http://f.hatena.ne.jp/po_log/20151128221259" target="_blank">城が建つ</a>そうですが、 Blenderでも課金しまくって強くなる何かがないか考えていたところ、いくつか方法があったので、 そのうちの一つMicrosoft製のBatched Blenderを使ってみた感じをシェアさせていただこうと思います。いわゆるやってみた系の記事なのでちょっとぐだってますが、適当に読み飛ばしていただければと。</p>
-            <p>　年末年始の飲み会で遅れた進捗、飲み代分ぐらいの数千円を課金して取り返しませんか？という意気込みで書いてみましたが、このコード、現在進行形でガンガン更新されており、皆さんの環境で動かなかったらごめんなさい・・・。対象の読者はクラウドを使うとどんな事ができるのかなんとなく知りたい方、AzureやEC2のクラウドインスタンスを使ったことあるけど、もっとたくさんのマシンを同時に起動してもっと課金したい方を対象にしています。</p>
-            <br />
-            <p>この記事は下記のような構成になっています。
-              <ul>
-                <li>クラウドサービスとBlender（Blenderとクラウドで何ができるか知ってもらいたい</li>
-                <li>Batched Blenderとはどんなものか？（Microsoftがどういうイベントでどんなデモをしたのか見てもらいたい</li>
-                <li>実際に使ってみた（導入から実行までをつらつらと</li>
-                <li>おわりに（小学生並みの感想</li>
-              </ul>
+            <p>この文章は<a href="https://atnd.org/events/86411"  target="_blank">第4回 Blender 勉強会 難波　スカルプト入門</a>(2017/4/16開催)の発表で用いた内容のメモです。</p>
+            <p>
+              <ol>
+                <li>
+                  スカルプティングの使い所など
+                  <ul>
+                    <li>
+                      感覚的に凹凸やうねりを作りたい（服のシワなど）
+                    </li>
+                    <li>
+                      既存の物を少し手直ししたい（3Dスキャンしたデータの修復など）
+                    </li>
+                    <li>
+                      全部スカルプトする事に囚われず、普通にエディットモードでプリミティブ追加したりもしよう
+                    </li>
+                    <li>
+                      3Dプリント用のモデルや小物など、動かないもの（トポロジーが多少荒れてても良いもの）
+                    </li>
+                    <li>
+                      リトポロジーまで見据えて出来るようになれば超強力なツールに！
+                    </li>
+                    <li>
+                      ZBrushはやっぱり凄いソフト（CPUの使い方などがうまい）なので、凝った使い方をするならZBrush（若しくは併用）の方が良いかも
+                    </li>
+                  </ul>
+                </li>
+                <li>スカルプティングの基本操作について
+                  <ul>
+                    <li>
+                      kurosawaさんが東ゲ部にて発表されたスライド : <a href="https://www.slideshare.net/kurosaurus/blender-72794461"  target="_blank">Blenderで学ぶスカルプト勉強会</a>
+                    </li>
+                    <li>当日の様子Togetterまとめ : <a href="https://togetter.com/li/1087140"  target="_blank">Blender勉強会 Step 3 #東ゲ部Blender勉強会 まとめ</a></li>
+                    <li>Dyntopoでやる場合
+                      <ul>
+                        <li>PCにのパワーによるが3〜5pxに</li>
+                        <li>モードを変えたりするとすぐOFFになるので、動きがおかしい時はチェックする</li>
+                        <li>描く場所のみポリゴンを分割するので、ポリ数はmulti resolutionより少ない傾向</li>
+                        <li>トポロジはかなり荒れる</li>
+                        <li>テクスチャを使ってスタンプなどをする場合、0.1~0.3pxぐらいに設定する必要があるがクソ重い上にZBrushのようにスムーズにならない</li>
+                        <li>今後のUpdateでCPUのマルチスレッドの使い方がうまくなれば良くなるかもしれない・・・（我慢できなかったら自分で直そう！オープンソース脳</li>
+                        <li><a href="https://twitter.com/Bookyakuno/status/782252940035657728"  target="_blank">忘却野さんのワークフロー</a>も参考にしてみて下さい</li>
+                      </ul>
+                    </li>
+                    <li>multi resolutionでやる場合
+                      <ul>
+                        <li>分割数はPCのパワーによるが5か6ぐらい</li>
+                        <li>全体を均等に分割されていくので、トポロジがマシ</li>
+                        <li>CPUのマルチスレッドが効くので、多少ポリ数が多くても動く</li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li>テクスチャで鱗や岩肌を作る</li>
+                  <ul>
+                    <li>白い部分が盛り上がったり削られたりする。黒い部分は動かない</li>
+                    <li>スタンプ的に使う場合、ツールパネル（左側に出るやつ）→カーブの設定を、ホチキス型の直線のものにする（周辺がボケないようにする）</li>
+                    <li>
+                      ノードエディタ→編集するノードをテクスチャに（市松模様のやつ）→赤いブラシのアイコンを選択→新規ボタンを押す→ノードを使用にチェック→ノードを追加で入力→画像を選択→テクスチャ欄でエリア平面を選択（ノーマル方向に塗られる）→ミラー編集にデフォルトでXミラーになっているのでチェックを外す
+                    </li>
+                    <li>
+                      色んなブラシがあるので「texture seamless」や「Sculpt Brush」等で検索してみよう
+                    </li>
+                    <li>その他参考リンク
+                      <ul>
+                        <li>
+                          <a href="http://www.deviantart.com/browse/all/?section=&global=1&q=texture+seamless&offset=66"  target="_blank">フリーtextureなど</a>
+                        </li>
+                        <li>
+                          <a href="http://root-project.org/2011/08/20/work/blender3d/sculpt-brush-tips/"  target="_blank">Sculpt brushについてのTips</a>
+                        </li>
+                        <li>
+                          <a href="http://blenderaddonlist.blogspot.jp/2015/02/addon-sculpt-brushes.html"  target="_blank">スカルプトブラシを管理するadd-on</a>
+                        </li>
+                        <li>
+                          <a href="http://strigoi-vii.deviantart.com/art/Sculptris-Alpha-6-Mega-Pack-Brushes-329445000"  target="_blank">brush詰め合わせ（ダウンロードは右上のボタンから）</a>
+                        </li>
+                        <li>
+                          <a href="http://d.hatena.ne.jp/azbshgb/20150807/1438930133"  target="_blank">その他もう少し詳細なTips</a>
+                        </li>
+                        <li>
+                          <a href="http://blender.stackexchange.com/questions/3516/how-can-i-improve-viewport-performance-when-using-dyntopo"  target="_blank">Dyntopoに関するパフォーマンスチューニングTips</a>
+                        </li>
+                        <li>
+                          <a href="https://twitter.com/compon/status/616769036681003008/photo/1"  target="_blank">総長さんのたけのこ</a>
+                        </li>
+                        <li>
+                          Youtubeのスピードスカルプティングをスローで再生して勉強しよう : <a href="https://www.youtube.com/watch?v=OG1PNE2NZrU"  target="_blank">How To Improve Your Sculpts / Sculpt Rant</a>
+                        </li>
+                      </ul> <a href=""  target="_blank"></a>
+                    </li>
+                  </ul>
+              </ol>
             </p>
-            <hr>
-            <h2>クラウドサービスとBlender</h2>
-            <p>Blenderとクラウドサービスの連携は下記の点で非常に相性が良いと感じます。
-            <ul>
-              <li>yumなどスクリプトでサクサク自動インストール可能</li>
-              <li>仮想マシンの雛型を作って複製しまくってもOK</li>
-              <li>プロダクトキーの入力やシリアル番号の入力が不要なのでソフトを展開してすぐ使える</li>
-              <li>借りているサーバの性能を変更してもライセンスがどうとか言われない</li>
-              <li>ライセンスサーバも不要（ライセンスサーバが落ちて起動できない等のトラブルが無い）</li>
-            </ul>
 
-            　主にプロジェクトにレンダリングの重さのばらつきがあっても必要な分だけパワーを使うことができるのが魅力的です。私も実際に使ったことなかった時は、「でも、お高いんでしょう・・・？」って感じでしたが、実際に使ってみるとそうでもなくて、8コア16スレッドのマシン（F8）を20分使って200円程度でした。<a href="https://www.blender.org/download/demo-files/" target="_blank">Blender公式のClassRoomデモシーン</a>をレンダリングしたのですが、手元のノートPCだと2時間かかるレンダリングが、たった缶ジュース約2本分課金するだけで20分になったことになります。４～６千円程かければ相当な時間節約できますね♪ また、クラウドサービスの時間課金とレンダリングの相性も良いです。殆どのクラウドサービスではマシンを利用する時間によって課金されるので、ハイスペックマシンを1台8時間使うのと、8台を1時間使う料金がほぼ同じ（厳密にはファイル転送量が増えるので若干変わりますが）なのです！</p>
-            <br />
-            <hr>
-            <h2>Batched Blenderとはどのようなものか？</h2>
-            <p>　Batched BlenderはMicrosoft社製のBlender用Addonです。Microsoft社が公式イベントでAzureBatchというサービスのデモのために作ったようです。</p>
-            <p><a href="https://azure.microsoft.com/en-in/resources/videos/azure-batch-demo-blender/" target="_blank">Azure Batch Demo: Blender</a></p>
-            <p>　動画の内容を簡単に説明すると、手元のPCでレンダーさせつつ、 AzureBatchへレンダージョブを投げ、Azureポータルからファイルを取り出してその速度差を比較するというデモを行っています。37個のサーバで処理させていますが、これはレンダリングする画像は6X6の36分割され最後の1つのサーバで1枚に結合する処理をさせているとのことです。レンダリングの終了後、Azureのポータルからジョブの出力ファイルを取り出して完了しています。さて、この動画に出てくるUIですが、結構Azureの進化が速くて今のAzureと違います。さらに使ってみて分かったのですが、動画では静止画を複数台で処理して最後にステッチする手法を使っていますが、現行の開発版では挙動が変わっており、複数フレーム（アニメーション）のレンダリングのみ分散処理が働くので注意してください。</p>
-            <br />
-            <hr>
-            <h2>実際に使ってみた</h2>
-            <h3>セットアップ</h3>
-            <p>　Githubにコードがあるので、そこの説明に従ってインストールします。・・・と言いたいところなのですが、どうやら<a href="https://github.com/Azure/azure-batch-apps-blender" href="_blank">Azureのアカウントにあるコード</a>は書き直し中みたいで、Warningという文言とともにこちらの<a href="https://github.com/annatisch/azure-batch-apps-blender/tree/dev/" href="_blank">annatischさんのリポジトリ</a>へ誘導されています。いきなり穏やかじゃないですが進めましょう。上から概要・ライセンスについて・Blenderについて書かれたのち、Blender.Clientと書かれているところからセットアップについて書かれています。簡単に訳すと下記のようになります。</p>
-            <ol>
-              <li>"Blender Foundation\Blender\2.7x\python\bin"（Windowsのデフォルトではc:\Program Filesの下）へhttps://bootstrap.pypa.io/get-pip.pyからget-pip.pyをダウンロードしてきて置く。</li>
-              <li>コマンドプロンプトを管理者権限で開いて上記binフォルダへ移動する</li>
-              <li>python get-pip.pyを実行する（Windowsの場合はpython.exe）</li>
-              <li>"Blender Foundation\Blender\2.7x\python\Scripts"へ移動</li>
-              <li>上記フォルダでそこに書かれているpipコマンドを二つ実行する</li>
-            </ol>
-            <p>　次にアドオンのインストールをするのですが、ここでインストール用のzipファイルを作成します。まず、Githubのプロジェクトページ右上の方にある緑のClone or downloadボタンを押し、出てくるメニューからDownloadZIPをクリックし、プロジェクトを丸ごとダウンロードします。</p>
-            <img src="img/dl.png" />←このボタン
-            <p>　そしてダウンロードしたzipファイルを解凍し、その中のazure-batch-apps-blender/Blender.Clientフォルダの中にあるbatched_blenderというフォルダを再度圧縮してzipファイルにします。これがAddonになりますので、いつも通りBlenderのAddonメニューのファイルからインストールで読み込ませてください。</p>
-            <p>　さて、インストールが済んだら次はAzureに接続するための認証情報などを入力していきます。
-              <ul>
-                <li>Log directory : ログファイルを置く場所</li>
-                <li>Batch Account URL : AzureBatchを作成した時のURLを記入します。AzureBatchポータルのプロパティから確認できます。ex)https://hogehoge.southcentralus.batch.azure.com</li>
-                <li>Batch Account : 上記URLからドメイン部を除いたものになります。ex)hogehoge</li>
-                <li>Batch Account Key : AzureBatchポータルのキーの項目から確認できます。ex)faleafweijoac4325...みたいな英数記号の長い羅列</li>
-                <li>Storage Account : AzureStorageで作ったストレージの名前（人によってはAzureBatchのアカウントを作成した時に作成済みかも）</li>
-                <li>Storage Account Key : AzureStorageの管理画面のアクセスキーから確認できます。</li>
-              </ul>
-              　上記すべて記入したら設定を保存して、Blenderを再起動してください。すると図のようなパネルがレンダーパネルに出ます。<br />
-              <img src="img/panel.png" /><br />
-              再起動しないとエラーが表示されます。
-            </p>
-            <br />
-
-            <h3>実行</h3>
-            <p>　さてさて早速submit new jobからレンダリングするフレーム数を決めて、好きなマシン数を決めてpool（バーチャルマシンの集まりみたいなもの）を作成して実行～♪と思いきやエラーを吐いてしまいます。このパネルからのpool作成がうまくいかないようで、まずはjobを作成する前にその基盤となるpoolを作成するため、ReturnHomeボタンをクリックして一旦最初の状態に戻ってください。次にPoolsメニューのCreateから好きな名前（後に出てくるプールIDではない）と使うマシン数（<a href="https://docs.microsoft.com/ja-jp/azure/azure-subscription-service-limits" href="_blank">総CPUコア数20個の上限があるので、デフォルトで使われるマシンでは上限20台まで。もっと必要な場合はサポートへ連絡すれば可能。</a>）を入力し、StartPoolを押して数分待ちます。マシンと言っても<a href="https://azure.microsoft.com/ja-jp/pricing/details/virtual-machines/linux/" href="_blank">価格と性能がいろいろある</a>のですが、デフォルトではstandard_a1のマシン（1時間利用で10円ぐらいのシングルコアのマシン）が選択されるようです。しばし待ってからリフレッシュボタンを押し、プール名の横の更新中矢印アイコンが消えてチェックボックスになったらプールの作成完了です。下の方に表示されているプールIDをコピーして、submit new jobのUse Pool IDにペーストし、Submit Jobボタンを押します。Azureの管理コンソールからマシンやジョブ・タスクを監視すると良いでしょう。</p>
-            <p>↓一斉に並列で処理される様は壮観です<br />
-            <img src="img/tasks.png" /><br />
-            core i7 860(4コア8スレッド)のマシンで24分かかったレンダリングが、19分で完了しました。1コアのマシンとは言え、20台も集まるとそれなりのパワーになりますね。</p>
-            <br />
-
-            <h3>レンダー結果の取り出し</h3>
-            <p>　Management Portalボタンを押すとAzureの管理画面がデフォルトのブラウザで開きます。下図のように（ちょっと見切れてますが）バッチ→ジョブ→タスク→ノード上のファイルとたどると、見覚えのあるファイル名があるはずなので、そこから画像をダウンロードします。Addonにアニメーションを束ねるような旨のチェックボックスがありますが、チェックするとエラーが出てしまいます。今のところノード単位にアクセスして集めるしかないようで、アニメーションのフレーム数が多いと大変ですね・・・。取り出し終わったらBlenderに戻ってPoolsパネルから不要になったpoolを削除しましょう。Jobが終わってもPoolが生きていると課金されるので注意してください。</p>
-            <a href="https://github.com/itosue/azure-blender/blob/gh-pages/img/dlnode.png" target="_blank"><img src="img/dlnode.png" width="600"/></a><br />
-            クリックで拡大<br />
-            <br />
-            <hr>
-            <h2>おわりに</h2>
-            <p>　Blenderとクラウドの親和性と、AzureBatchを利用したAddon、BatchedBlenderについて紹介させていただきました。あんな大きな会場でBlenderを使ったデモが行われていたなんてちょっと嬉しいですね。実際Addonの出来も最初こそワーニングが書いてあってビビりましたが、コードを自分の環境向けに修正する必要もなく、割とすんなり動きました。プールやジョブの作成や削除で行ったり来たりしても落ちずにそこそこ使えるなという感じです。実は当初AWSを使ったBrendaというクラウドオーケストレーションツールについて書こうと思っていたのですが、あちらは少しコードの修正が必要でした。ジョブをAzureへ渡す時、プールIDさえ分かればよいので、自前で強力なプールを作成してそのIDを渡して使えば頼もしいツールになると思います。アニメーションの結合でのエラーやレンダ済ファイルの収集など、まだ未完成な部分もありますが、何せソースが公開されているので、これから直せそうなところはPullRequest出してみようかなぁと思います。</p>
-            <p>　Azure上の料金表示ではマシンを１か月借りた時の値段が書いてあり、何万何十万という価格が表示されてビビりますが、実は1時間単位にするとそうでもなく、最強マシン（24コア48スレッド・TeslaK80ｘ4枚刺し＝19968cudaコアでPascal世代のTitanX1枚分の5.6倍・メモリ224GBのモンスターマシン）の<a href="https://azure.microsoft.com/ja-jp/pricing/details/virtual-machines/linux/" target="_blank">NCシリーズでも現時点で約259円です</a>。これだけ強力なマシンなら1時間もあれば大抵のシーンをレンダリングできると思いますが、8時間ブン回しても2072円です。実際にはファイル転送量なども加算されますが、2500円もあればお釣りが来るでしょう。軽くお酒を飲んで食事するぐらいです。年末年始、ポンポン飲み会行き過ぎて進捗遅れ気味だなぁ・・・って時、勉強会や打ち合わせに軽量ノートPCしか持ってないのに急に重たいシーンをレンダリングしてみせなきゃいけない時も安心ですね。</p>
-            <p>　なお強力なマシンを1台使うだけなら今回の記事のような仕組みは不要で、リモートデスクトップを使った事がある方ならすぐにパワフルなマシン環境をレンタカーのように借りることができます。また、AWSと違ってAzureなら無料枠を使い切ってしまってもシステムが止まるだけで意図せぬ課金は生まれないようになっているのと、AWSが時間単位課金なのに対してAzureは分単位課金なので、ちょっとマシンを上げて落としてしても急に値段が膨れ上がったりしませんので入門者におススメです。まだクラウドサービスを使ったことない方も触ってみてはいかがでしょうか？</p>
-            <p>　Blender Advent Calender 2016 明日の記事は<a href="https://twitter.com/wlk_yos" target="_blank">@wlk_yosさん</a>による「Blender + ○○ でゲームを何度か作るおはなし」です。どうぞお楽しみに！</p>
-            <br />
-            <p>すぺしゃるさんくす！<br /><a href="https://twitter.com/mayotoya">@MayoToya</a></p>
-          </nav>
+          </div> <!-- blog post -->
 
         </div><!-- /.blog-main -->
 
